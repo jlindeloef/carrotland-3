@@ -155,8 +155,23 @@ while temp < num_carrots:
     temp += 1
 del temp
 
+def print_rules():
+  print('''
+========================================================================
+                        Welcome to Carrotland!
+The rowdy rabbit has almost taken all of the carrots from the garden from
+underground. He left the leaves sticking up so you don't know if there is
+a carrot attached to it.
+There are 5 carrots left! Find them before the rowdy rabbit does!
+
+        X = Found a carrot!
+        * = Only leaves!
+                            Good Luck!
+======================================================================
+''')
 # Play Game
 os.system('clear')
+print_rules()
 print_board(board_display)
 
 for turn in range(num_turns):
@@ -175,15 +190,15 @@ for turn in range(num_turns):
       break
 
   os.system('clear')
-
+  print_rules()
   carrot_hit = False
   for carrot in carrot_list:
     if carrot.contains(guess_coords):
-      print("Yes!")
+      print("YEAH!")
       carrot_hit = True
       board_display[guess_coords['row']][guess_coords['col']] = 'X'
       if carrot.found():
-        print("YEAH! You found a carrot!")
+        print("You found a carrot!")
         carrot_list.remove(carrot)
       break
   if not carrot_hit:
