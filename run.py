@@ -1,11 +1,15 @@
 from random import randint
 import os
 
-#carrot Class
+"""
+Carrot class
+"""
 class Carrot:
   def __init__(self, size, orientation, location):
     self.size = size
-    
+"""
+Defying the borders of the game and errorhandling if user guess outside the borders.
+"""    
     if orientation == 'horizontal' or orientation == 'vertical':
       self.orientation = orientation
     else:
@@ -31,7 +35,9 @@ class Carrot:
             raise IndexError("Row is out of range.")
       else:
         raise IndexError("Column is out of range.")
-
+"""
+If user choose same input.
+""" 
     if self.filled():
       print_board(board)
       print(" ".join(str(coords) for coords in self.coordinates))
@@ -54,7 +60,9 @@ class Carrot:
       if coords == location:
         return True
     return False
-  
+"""
+When a carrot is found
+"""   
   def found(self):
     for coords in self.coordinates:
       if board_display[coords['row']][coords['col']] == 'O':
@@ -64,22 +72,28 @@ class Carrot:
     return True
 
   
-#Settings Variables
-row_size = 5 #number of rows
-col_size = 5 #number of columns
+"""
+Setting variables, number of rows, columns, turns and size.
+""" 
+row_size = 5 
+col_size = 5 
 num_carrots = 5
 max_carrot_size = 1
 min_carrot_size = 1
 num_turns = 25
 
-#Create lists
+"""
+Create the carrot list
+""" 
 carrot_list = []
 
 board = [[0] * col_size for x in range(row_size)]
 
 board_display = [["O"] * col_size for x in range(row_size)]
 
-#Functions
+"""
+The functions
+""" 
 def print_board(board_array):
   print("\n  " + " ".join(str(x) for x in range(1, col_size + 1)))
   for r in range(row_size):
@@ -143,7 +157,9 @@ def get_col():
     except ValueError:
       print("\nPlease enter a number")
 
-# Create the carrots
+"""
+Create the carrots
+""" 
 
 temp = 0
 while temp < num_carrots:
@@ -154,6 +170,7 @@ while temp < num_carrots:
     carrot_list.append(Carrot(carrot_info['size'], carrot_info['orientation'], carrot_info['location']))
     temp += 1
 del temp
+
 
 def print_rules():
   print('''
@@ -215,3 +232,4 @@ if carrot_list:
   print("Sorry! The rabbit found the carrots before you did!")
 else:
   print("CONGRATULATION! You found all 5 carrots! Yum! carrotcake!")
+  
