@@ -7,9 +7,7 @@ Carrot class
 class Carrot:
   def __init__(self, size, orientation, location):
     self.size = size
-"""
-Defying the borders of the game and errorhandling if user guess outside the borders.
-"""    
+
     if orientation == 'horizontal' or orientation == 'vertical':
       self.orientation = orientation
     else:
@@ -35,9 +33,7 @@ Defying the borders of the game and errorhandling if user guess outside the bord
             raise IndexError("Row is out of range.")
       else:
         raise IndexError("Column is out of range.")
-"""
-If user choose same input.
-""" 
+
     if self.filled():
       print_board(board)
       print(" ".join(str(coords) for coords in self.coordinates))
@@ -60,9 +56,7 @@ If user choose same input.
       if coords == location:
         return True
     return False
-"""
-When a carrot is found
-"""   
+
   def found(self):
     for coords in self.coordinates:
       if board_display[coords['row']][coords['col']] == 'O':
@@ -157,10 +151,23 @@ def get_col():
     except ValueError:
       print("\nPlease enter a number")
 
+def game_over():
+
+    """
+    End game or loose
+    """
+    while True:
+      pa = input("Do you want to play again? (y/n) ")
+      if pa == "n":
+          return False
+      elif pa == "y":
+          return True
+      else:
+          print("That is not a valid answer. Please enter 'y' or 'n'.")
+
 """
 Create the carrots
 """ 
-
 temp = 0
 while temp < num_carrots:
   carrot_info = random_location()
@@ -186,10 +193,11 @@ There are 5 carrots left! Find them before the rowdy rabbit does!
                             Good Luck!
 ======================================================================
 ''')
-# Play Game
-os.system('clear')
-print_rules()
-print_board(board_display)
+def play_game():
+
+  os.system('clear')
+  print_rules()
+  print_board(board_display)
 
 for turn in range(num_turns):
   print("Turn:", turn + 1, "of", num_turns)
@@ -230,6 +238,7 @@ for turn in range(num_turns):
 # End Game
 if carrot_list:
   print("Sorry! The rabbit found the carrots before you did!")
+  
 else:
   print("CONGRATULATION! You found all 5 carrots! Yum! carrotcake!")
-  
+  game_over()
