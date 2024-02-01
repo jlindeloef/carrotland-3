@@ -74,7 +74,7 @@ col_size = 5
 num_carrots = 5
 max_carrot_size = 1
 min_carrot_size = 1
-num_turns = 25
+num_turns = 2
 
 """
 Create the carrot list
@@ -88,7 +88,26 @@ board_display = [["O"] * col_size for x in range(row_size)]
 """
 The functions
 """ 
-def print_board(board_array):
+def print_board_start(board_array):
+  print('''
+========================================================================
+                        Welcome to Carrotland!
+The rowdy rabbit has almost taken all of the carrots from the garden from
+underground. He left the leaves sticking up so you don't know if there is
+a carrot attached to it.
+There are 5 carrots left! Find them before the rowdy rabbit does!
+
+        X = Found a carrot!
+        * = Only leaves!
+                            Good Luck!
+======================================================================
+''') 
+  print("\n  " + " ".join(str(x) for x in range(1, col_size + 1)))
+  for r in range(row_size):
+    print(str(r + 1) + " " + " ".join(str(c) for c in board_array[r]))
+  print()
+
+def print_board(board_array): 
   print("\n  " + " ".join(str(x) for x in range(1, col_size + 1)))
   for r in range(row_size):
     print(str(r + 1) + " " + " ".join(str(c) for c in board_array[r]))
@@ -157,13 +176,13 @@ def game_over():
     End game or loose
     """
     while True:
-      pa = input("Do you want to play again? (y/n) ")
-      if pa == "n":
-          return False
-      elif pa == "y":
-          return True
-      else:
-          print("That is not a valid answer. Please enter 'y' or 'n'.")
+        user_input = input("Do you want to play again?(y/n):").strip().lower()
+        if user_input == "n":
+            break
+        elif user_input == 'y':
+            play_game()
+        else:
+            print("That is not a valid answer.")
 
 """
 Create the carrots
@@ -182,22 +201,34 @@ del temp
 def print_rules():
   print('''
 ========================================================================
-                        Welcome to Carrotland!
-The rowdy rabbit has almost taken all of the carrots from the garden from
-underground. He left the leaves sticking up so you don't know if there is
-a carrot attached to it.
-There are 5 carrots left! Find them before the rowdy rabbit does!
+                        Carrotland!
+      Find the carrots before the rowdy rabbit does!
 
         X = Found a carrot!
         * = Only leaves!
                             Good Luck!
 ======================================================================
 ''')
-def play_game():
 
-  os.system('clear')
+def game_over():
+    """
+    End game or loose
+    """
+    while True:
+        user_input = input("Do you want to play again?(y/n):").strip().lower()
+        if user_input == "n":
+            break
+        elif user_input == 'y':
+            play_game()
+        else:
+            print("That is not a valid answer.")
+
+
+def play_game():
+  
   print_rules()
-  print_board(board_display)
+print_board_start(board_display)
+
 
 for turn in range(num_turns):
   print("Turn:", turn + 1, "of", num_turns)
@@ -235,10 +266,12 @@ for turn in range(num_turns):
   if not carrot_list:
     break
 
-# End Game
+"""
+End game
+""" 
 if carrot_list:
   print("Sorry! The rabbit found the carrots before you did!")
-  
 else:
   print("CONGRATULATION! You found all 5 carrots! Yum! carrotcake!")
-  game_over()
+
+game_over()
