@@ -197,6 +197,7 @@ def print_rules():
 ''')
 
 os.system('clear')
+print("Find the carrots! You have 10 turns!\n")
 print_board_start(board_display)
 
 
@@ -241,5 +242,7 @@ End game
 """ 
 if carrot_list:
   print("Sorry! The rabbit found the carrots before you did!")
+  print('Play again? Press "RUN PROGRAM" above.')
 else:
   print("CONGRATULATION! You found all 5 carrots! Yum! carrotcake!")
+  print('Play again? Press "RUN PROGRAM" above.')
