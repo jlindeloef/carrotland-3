@@ -5,63 +5,63 @@ import os
 Carrot class
 """
 class Carrot:
-  def __init__(self, size, orientation, location):
+  def __init__(self, size, land, location):
     self.size = size
 
-    if orientation == 'horizontal' or orientation == 'vertical':
-      self.orientation = orientation
+    if land == 'horizontal' or land == 'vertical':
+      self.land = land
     else:
       raise ValueError("Value must be 'horizontal' or 'vertical'.")
     
-    if orientation == 'horizontal':
+    if land == 'horizontal':
       if location['row'] in range(row_size):
-        self.coordinates = []
+        self.placement = []
         for index in range(size):
           if location['col'] + index in range(col_size):
-            self.coordinates.append({'row': location['row'], 'col': location['col'] + index})
+            self.placement.append({'row': location['row'], 'col': location['col'] + index})
           else:
-            raise IndexError("Column is out of range.")
+            raise IndexError("Column is not in the land.")
       else:
-        raise IndexError("Row is out of range.")
-    elif orientation == 'vertical':
+        raise IndexError("Row is not in the land.")
+    elif land == 'vertical':
       if location['col'] in range(col_size):
-        self.coordinates = []
+        self.placement = []
         for index in range(size):
           if location['row'] + index in range(row_size):
-            self.coordinates.append({'row': location['row'] + index, 'col': location['col']})
+            self.placement.append({'row': location['row'] + index, 'col': location['col']})
           else:
-            raise IndexError("Row is out of range.")
+            raise IndexError("Row is not in the land.")
       else:
-        raise IndexError("Column is out of range.")
+        raise IndexError("Column is not in the land.")
 
     if self.filled():
       print_board(board)
-      print(" ".join(str(coords) for coords in self.coordinates))
+      print(" ".join(str(place) for place in self.placement))
       raise IndexError("You searched there already")
     else:
       self.fillBoard()
   
   def filled(self):
-    for coords in self.coordinates:
-      if board[coords['row']][coords['col']] == 1:
+    for place in self.placement:
+      if board[place['row']][place['col']] == 1:
         return True
     return False
   
   def fillBoard(self):
-    for coords in self.coordinates:
-      board[coords['row']][coords['col']] = 1
+    for place in self.placement:
+      board[place['row']][place['col']] = 1
 
   def contains(self, location):
-    for coords in self.coordinates:
-      if coords == location:
+    for place in self.placement:
+      if place == location:
         return True
     return False
 
   def found(self):
-    for coords in self.coordinates:
-      if board_display[coords['row']][coords['col']] == 'O':
+    for place in self.placement:
+      if board_display[place['row']][place['col']] == 'O':
         return False
-      elif board_display[coords['row']][coords['col']] == '*':
+      elif board_display[place['row']][place['col']] == '*':
         raise RuntimeError("Board display inaccurate")
     return True
 
@@ -74,7 +74,7 @@ col_size = 5
 num_carrots = 5
 max_carrot_size = 1
 min_carrot_size = 1
-num_turns = 2
+num_turns = 25
 
 """
 Create the carrot list
@@ -113,19 +113,19 @@ def print_board(board_array):
     print(str(r + 1) + " " + " ".join(str(c) for c in board_array[r]))
   print()
 
-def search_locations(size, orientation):
+def search_locations(size, land):
   locations = []
 
-  if orientation != 'horizontal' and orientation != 'vertical':
-    raise ValueError("Orientation must have a value of either 'horizontal' or 'vertical'.")
+  if land != 'horizontal' and land != 'vertical':
+    raise ValueError("land must have a value of either 'horizontal' or 'vertical'.")
 
-  if orientation == 'horizontal':
+  if land == 'horizontal':
     if size <= col_size:
       for r in range(row_size):
         for c in range(col_size - size + 1):
           if 1 not in board[r][c:c+size]:
             locations.append({'row': r, 'col': c})
-  elif orientation == 'vertical':
+  elif land == 'vertical':
     if size <= row_size:
       for c in range(col_size):
         for r in range(row_size - size + 1):
@@ -139,14 +139,14 @@ def search_locations(size, orientation):
 
 def random_location():
   size = randint(min_carrot_size, max_carrot_size)
-  orientation = 'horizontal' if randint(0, 1) == 0 else 'vertical'
+  land = 'horizontal' if randint(0, 1) == 0 else 'vertical'
 
-  locations = search_locations(size, orientation)
+  locations = search_locations(size, land)
   if locations == 'None':
     return 'None'
   else:
     return {'location': locations[randint(0, len(locations) - 1)], 'size': size,\
-     'orientation': orientation}
+     'land': land}
 
 def get_row():
   while True:
@@ -170,20 +170,6 @@ def get_col():
     except ValueError:
       print("\nPlease enter a number")
 
-def game_over():
-
-    """
-    End game or loose
-    """
-    while True:
-        user_input = input("Do you want to play again?(y/n):").strip().lower()
-        if user_input == "n":
-            break
-        elif user_input == 'y':
-            play_game()
-        else:
-            print("That is not a valid answer.")
-
 """
 Create the carrots
 """ 
@@ -193,7 +179,7 @@ while temp < num_carrots:
   if carrot_info == 'None':
     continue
   else:
-    carrot_list.append(Carrot(carrot_info['size'], carrot_info['orientation'], carrot_info['location']))
+    carrot_list.append(Carrot(carrot_info['size'], carrot_info['land'], carrot_info['location']))
     temp += 1
 del temp
 
@@ -210,23 +196,7 @@ def print_rules():
 ======================================================================
 ''')
 
-def game_over():
-    """
-    End game or loose
-    """
-    while True:
-        user_input = input("Do you want to play again?(y/n):").strip().lower()
-        if user_input == "n":
-            break
-        elif user_input == 'y':
-            play_game()
-        else:
-            print("That is not a valid answer.")
-
-
-def play_game():
-  
-  print_rules()
+os.system('clear')
 print_board_start(board_display)
 
 
@@ -235,12 +205,12 @@ for turn in range(num_turns):
   print("carrots left:", len(carrot_list))
   print()
   
-  guess_coords = {}
+  guess_place = {}
   while True:
-    guess_coords['row'] = get_row()
-    guess_coords['col'] = get_col()
-    if board_display[guess_coords['row']][guess_coords['col']] == 'X' or \
-     board_display[guess_coords['row']][guess_coords['col']] == '*':
+    guess_place['row'] = get_row()
+    guess_place['col'] = get_col()
+    if board_display[guess_place['row']][guess_place['col']] == 'X' or \
+     board_display[guess_place['row']][guess_place['col']] == '*':
       print("\nYou guessed that one already.")
     else:
       break
@@ -249,16 +219,16 @@ for turn in range(num_turns):
   print_rules()
   carrot_hit = False
   for carrot in carrot_list:
-    if carrot.contains(guess_coords):
+    if carrot.contains(guess_place):
       print("YEAH!")
       carrot_hit = True
-      board_display[guess_coords['row']][guess_coords['col']] = 'X'
+      board_display[guess_place['row']][guess_place['col']] = 'X'
       if carrot.found():
         print("You found a carrot!")
         carrot_list.remove(carrot)
       break
   if not carrot_hit:
-    board_display[guess_coords['row']][guess_coords['col']] = '*'
+    board_display[guess_place['row']][guess_place['col']] = '*'
     print("Sorry! No carrot!")
 
   print_board(board_display)
@@ -273,5 +243,3 @@ if carrot_list:
   print("Sorry! The rabbit found the carrots before you did!")
 else:
   print("CONGRATULATION! You found all 5 carrots! Yum! carrotcake!")
-
-game_over()
